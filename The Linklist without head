@@ -1,0 +1,249 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef int ElemType;
+
+typedef struct LNode
+{
+	ElemType data;
+	struct LNode *next;
+}LNode, *Linklist;
+
+
+/*初始化链表*/
+int ListInit(Linklist *head)
+{
+	*head=NULL;
+	return 0;
+}
+
+/*判断链表是否为空*/
+int ListEmpty(Linklist head)
+{
+	if(head==NULL)
+		return 1;
+	return 0;
+}
+
+/*头插法创建一个链表*/
+int ListCreate_front(Linklist *head)
+{
+	int i;
+	int len;
+	int e;
+	LNode *p;
+	printf("please input the len of the linklist which you want to create: ");
+	scanf("  %d",&len);
+	for(i=1;i<=len;i++)
+	{
+		p=(LNode *) malloc (sizeof(LNode));
+		if(0==p)
+			return -1;
+		printf("please input the data of NO.%d Node: ",i);
+		scanf("%d",&e);
+		p->data=e;
+		if(i==1)
+		{
+			p->next=NULL;
+			*head=p;
+		}
+		else
+		{
+			p->next=*head;
+			*head=p;
+		}
+		
+	}
+	return 0;
+}
+
+/*尾插法创建链表*/
+int ListCreate_rear(Linklist *head)
+{
+	int i;
+	int len;
+	int e;
+	LNode *p;
+	LNode *r = *head;
+	printf("please input the len of the linklist which you want to create: ");
+	scanf("  %d",&len);
+	for(i=1;i<=len;i++)
+	{
+		p=(LNode *) malloc (sizeof(LNode));
+		if(0==p)
+			return -1;
+		printf("please input the data of NO.%d Node: ",i);
+		scanf("%d",&e);
+		p->data=e;
+		if(i==1)
+		{
+			*head=p;
+			r=p;
+		}
+		else
+		{
+			r->next=p;
+			r=p;
+		}
+	}
+	r->next=NULL;
+	return 0;
+}
+
+/*向链表中插入元素*/
+int ListInsert(Linklist *head)
+{
+	int loc;
+	int i=1;
+	LNode *p,*pre;
+	p=NULL;
+	pre=*head;
+	ElemType e;
+	printf("please input the loc where you want to insert the elem: ");
+	scanf("  %d",&loc);
+	while(pre != NULL && i<loc-1)
+	{
+		pre=pre->next;
+		i++;
+	}
+	if(pre == NULL || i>=loc)
+		return -1;
+	else
+	{
+		p=(LNode *) malloc (sizeof(LNode));
+		if(NULL==p)
+			return -2;
+		printf("please input the elem which you want to insert: ");
+		scanf("  %d",&e);
+		p->data=e;
+		if(loc==1)
+		{
+			p->next=pre;
+			pre=p;
+		}
+		p->next=pre->next;
+		pre->next=p;
+	}
+		return 0;
+	
+}
+
+/*向链表中删除元素*/
+int ListDelete(Linklist *head)
+{
+	int loc;
+	LNode *p,*pre;
+	pre=*head;
+	p=NULL;
+	int i=1;
+	ElemType e;
+	printf("please input the loc where you want to delete :  ");
+	scanf(" %d",&loc);
+	if(1==ListEmpty(*head))
+		return -1;
+	while(pre->next!=NULL && i<loc)
+	{
+		pre=pre->next;
+		i++;
+	}
+	if(pre->next == NULL || i>loc)
+		return -2;
+	else
+	{
+		if(loc==1)
+			{
+				p=pre;
+				e=p->data;
+				pre=p->next;
+			}
+			else
+			{
+				p=pre->next;
+				e=p->data;
+				pre->next=p->next;
+			}
+	}
+		return 0;
+	
+}
+
+/*访问链表元素*/
+int ListVisit(Linklist head)
+{
+	int loc;
+	LNode *p;
+	ElemType e;
+	p=head;
+	int i=1;
+	printf("please input the loc of the elem which you want to visit: ");
+	scanf("  %d",&loc);
+	if(1==ListEmpty(head))
+		return -1;
+	while(i<loc && p!=NULL)
+	{
+		p=p->next;
+		i++;
+	}
+	if(i>loc || p==NULL)
+		return -2;
+	e=p->data;
+	printf("the elem of NO.%d which you visit is :  %4d\n",loc,e);
+	return 0;
+}
+
+/*输出链表结点元素*/
+void ListShow(Linklist head)
+{
+	ElemType e;
+	LNode *p;
+	p=head;
+	printf("The sort of elem which in the Linklist is :   ");
+	while(p!=NULL)
+	{
+		e=p->data;
+		printf("%4d",e);
+		p=p->next;
+	}
+	printf("\n");
+}
+
+/*撤销链表*/
+int ListDestory(Linklist *head)
+{
+	LNode *p,*q;
+	p=*head;
+	while(p != NULL)
+	{
+		q=p;
+		p=p->next;
+		free(q);
+	}
+	(*head)=NULL;
+	return 0;
+}
+
+
+#include <stdio.h>
+#include "linklist.h"
+void main()
+{
+	Linklist head;
+	ListInit(&head);
+	ListCreate_front(&head);
+	ListShow(head);
+	ListInsert(&head);
+	ListShow(head);
+	ListDelete(&head);
+	ListShow(head);
+	ListVisit(head);
+	ListDestory(&head);
+
+	ListInit(&head);
+	ListCreate_rear(&head);
+	ListShow(head);
+	ListInsert(&head);
+	ListShow(head);
+	ListDelete(&head);
+	ListShow(head);
+	ListVisit(head);
+}
